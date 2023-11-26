@@ -62,5 +62,55 @@ namespace API.Controllers
         }
 
 
+        // GET /api/images/{id}
+
+        [HttpGet("{imageId}")]
+        public async Task<IActionResult> GetImageById(Guid imageId)
+        {
+            if (imageId == Guid.Empty)
+            {
+                return BadRequest(new
+                {
+                    Message = "Invalid ID format."
+                });
+            }
+
+            // Retrieve the image from the database
+            var image = await _db.Images.Include(x => x.User)
+            .Include(x => x.Tags)
+            .FirstOrDefaultAsync(x => x.Id == imageId);
+
+            //  var user = await _db.Users.Where(image)
+            // Check if the image with the provided ID exists
+            if (image == null)
+            {
+                return NotFound(new
+                {
+                    Message = "Image not found."
+                });
+            }
+            if (image.User == null)
+            {
+                return BadRequest(new
+                {
+                    Message = "User associated with the image is null."
+                });
+            }
+
+
+            var imageDetails = new
+            {
+                Id = image.Id,
+                Url = image.Url,
+                UserName = image.User?.Name,
+                UserId = image.User.Id,
+                Tags = image.Tags.Select(tag => tag.Text).ToList(),
+            };
+
+            return Ok(imageDetails);
+
+        }
+
+
     }
 }

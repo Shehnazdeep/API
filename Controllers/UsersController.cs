@@ -94,6 +94,7 @@ namespace API.Controllers
             await _db.SaveChangesAsync();
 
             var last10Images = user.Images.OrderByDescending(i => i.PostingDate).Take(10).ToList();
+            Console.WriteLine($"Number of images in last10Images: {last10Images.Count}");
             var userDto = new UserDTO()
             {
                 //advantage of using Dto classes is to promote consistency. 
