@@ -198,6 +198,30 @@ namespace API.Controllers
             return Ok(response);
         }
 
+        [HttpGet("populartags")]
+        public IActionResult GetPopularTags()
+        {
+            var popularTags = _db.Tags
+                .GroupBy(tag => tag.Text)
+                .OrderByDescending(group => group.Count())
+                .Take(5)
+                .Select(group => new
+                {
+                    Tag = group.Key,
+                    Count = group.Count()
+                })
+                .ToList();
+
+            var result = new
+            {
+                Count = popularTags.Sum(tag => tag.Count),
+                Tags = popularTags
+            };
+
+            return Ok(result);
+        }
+
+
 
 
 
