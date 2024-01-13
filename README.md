@@ -1,0 +1,1 @@
+Created a backend support for a social media app that imitates some of Instagram functionalities using ASP.NET framework. Users for the app are be able to post their pictures and see other people’s pictures.
